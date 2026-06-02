@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Fillr helps Australian drivers track fuel, scan receipts, find better fuel deals and keep tax-ready vehicle records." />
+  <title>Fillr | Track Fuel. Save Money. Stay Tax Ready.</title>
+  <link rel="stylesheet" href="assets/styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <a class="logo" href="index.html">Fillr</a>
+    <nav>
+      <a href="#features">Features</a>
+      <a href="#demo">Demo</a>
+      <a href="privacy.html">Privacy</a>
+      <a href="support.html">Support</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">Built for Australian drivers</p>
+        <h1>Track fuel. Save money. Stay tax ready.</h1>
+        <p class="hero-text">Fillr helps you record fuel purchases, scan receipts, track trips and understand what your vehicle really costs to run.</p>
+        <div class="hero-actions">
+          <a class="button primary" href="#download">Download coming soon</a>
+          <a class="button secondary" href="#features">See features</a>
+        </div>
+      </div>
+
+      <div class="phone-card" aria-label="Fillr app preview">
+        <div class="phone-frame">
+          <div class="phone-screen">
+            <div class="app-topbar">Fillr</div>
+            <div class="fuel-card">
+              <span>Best nearby</span>
+              <strong>91 ULP · $1.84/L</strong>
+              <small>Updated fuel deals near you</small>
+            </div>
+            <div class="fuel-card dark">
+              <span>Last tank</span>
+              <strong>7.8 L/100km</strong>
+              <small>$13.90 per 100km</small>
+            </div>
+            <div class="receipt-scan">Receipt scan ready</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="features" class="section">
+      <p class="eyebrow">What Fillr does</p>
+      <h2>Simple tools for real vehicle costs.</h2>
+      <div class="feature-grid">
+        <article>
+          <h3>Fuel logging</h3>
+          <p>Record litres, price, odometer and fuel type so every fill-up builds a clearer picture of your running costs.</p>
+        </article>
+        <article>
+          <h3>Receipt scanning</h3>
+          <p>Take a photo of a receipt and Fillr helps extract the important details automatically.</p>
+        </article>
+        <article>
+          <h3>Trip tracking</h3>
+          <p>Track trips for more accurate fuel usage reports and better tax-time records.</p>
+        </article>
+        <article>
+          <h3>Fuel deals</h3>
+          <p>Search fuel prices nearby or along your route to help find better value before you fill up.</p>
+        </article>
+        <article>
+          <h3>Vehicle profiles</h3>
+          <p>Manage multiple vehicles and keep each vehicle’s fuel history separate.</p>
+        </article>
+        <article>
+          <h3>Tax-ready exports</h3>
+          <p>Keep organised vehicle records that can be exported when it is time to prepare tax information.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="demo" class="section split-section">
+      <div>
+        <p class="eyebrow">Demo video</p>
+        <h2>Show people how Fillr works in seconds.</h2>
+        <p>Add your app screen recording here. You can use a YouTube embed or drop an MP4 into <code>assets/video/</code>.</p>
+      </div>
+      <div class="video-box">
+        <!-- YouTube option: replace VIDEO_ID below
+        <iframe src="https://www.youtube.com/embed/VIDEO_ID" title="Fillr demo video" allowfullscreen></iframe>
+        -->
+
+        <!-- Local video option: add assets/video/fillr-demo.mp4 -->
+        <video controls muted playsinline poster="assets/images/video-poster.png">
+          <source src="assets/video/fillr-demo.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+      </div>
+    </section>
+
+    <section id="download" class="cta-section">
+      <h2>Fillr is currently in testing.</h2>
+      <p>App Store link coming soon. For early access or support, contact the Fillr team.</p>
+      <a class="button primary" href="support.html">Contact support</a>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <span>© <span id="year"></span> Fillr. All rights reserved.</span>
+    <div>
+      <a href="privacy.html">Privacy Policy</a>
+      <a href="terms.html">Terms</a>
+      <a href="support.html">Support</a>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
