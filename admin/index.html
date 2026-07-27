@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Fillr Admin</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <main class="shell">
+        <header class="masthead">
+            <div>
+                <p class="eyebrow">Fillr Admin</p>
+                <h1>Account Access</h1>
+            </div>
+            <button id="disconnectButton" class="secondary hidden" type="button">Disconnect</button>
+        </header>
+
+        <section class="warning" aria-live="polite">
+            This dashboard controls real Fillr accounts. Grant and revoke access only after confirming the customer record.
+        </section>
+
+        <section id="connectionPanel" class="panel" aria-labelledby="connectionTitle">
+            <h2 id="connectionTitle">Connect</h2>
+            <form id="connectionForm" class="form">
+                <label>
+                    <span>Backend API URL</span>
+                    <input id="backendUrlInput" name="backendUrl" type="url" autocomplete="url" placeholder="https://api.example.com" required>
+                </label>
+                <label>
+                    <span>Admin API key</span>
+                    <input id="adminKeyInput" name="adminKey" type="password" autocomplete="off" required>
+                </label>
+                <button id="connectButton" type="submit">Connect</button>
+            </form>
+        </section>
+
+        <section id="dashboardPanel" class="panel hidden" aria-labelledby="searchTitle">
+            <div class="sectionHeader">
+                <div>
+                    <h2 id="searchTitle">User Search</h2>
+                    <p id="connectionLabel" class="muted"></p>
+                </div>
+            </div>
+
+            <form id="searchForm" class="searchForm">
+                <label>
+                    <span>Email</span>
+                    <input id="emailInput" name="email" type="email" autocomplete="email" placeholder="driver@example.com" required>
+                </label>
+                <button id="searchButton" type="submit">Search</button>
+            </form>
+
+            <p id="statusMessage" class="status" role="status" aria-live="polite"></p>
+
+            <section id="userPanel" class="userPanel hidden" aria-labelledby="userTitle">
+                <h3 id="userTitle">Selected User</h3>
+                <dl id="userDetails" class="details"></dl>
+
+                <div class="actions">
+                    <button id="grantLifetimeButton" type="button">Grant Lifetime Access</button>
+
+                    <form id="grantUntilForm" class="inlineForm">
+                        <label>
+                            <span>Grant until</span>
+                            <input id="expiryDateInput" type="date" required>
+                        </label>
+                        <button id="grantUntilButton" type="submit">Grant Until Date</button>
+                    </form>
+
+                    <button id="revokeButton" class="danger" type="button">Revoke Admin Access</button>
+                </div>
+
+                <p class="muted">
+                    Revoking admin access only removes administrator-granted Fillr Plus. It does not cancel an Apple App Store subscription or remove an active trial.
+                </p>
+            </section>
+        </section>
+    </main>
+
+    <script src="app.js" defer></script>
+</body>
+</html>
