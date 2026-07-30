@@ -21,7 +21,9 @@ const elements = {
     grantLifetimeButton: document.getElementById("grantLifetimeButton"),
     grantUntilForm: document.getElementById("grantUntilForm"),
     expiryDateInput: document.getElementById("expiryDateInput"),
-    revokeButton: document.getElementById("revokeButton")
+    revokeButton: document.getElementById("revokeButton"),
+    refreshRecentAppleButton: document.getElementById("refreshRecentAppleButton"),
+    recentAppleUsers: document.getElementById("recentAppleUsers")
 };
 
 elements.connectionForm.addEventListener("submit", (event) => {
@@ -40,7 +42,8 @@ elements.connectionForm.addEventListener("submit", (event) => {
     elements.dashboardPanel.classList.remove("hidden");
     elements.disconnectButton.classList.remove("hidden");
     elements.connectionLabel.textContent = backendUrl;
-    setStatus("Connected. Search for a user by email.", "success");
+    setStatus("Connected.", "success");
+    loadRecentAppleUsers();
 });
 
 elements.disconnectButton.addEventListener("click", () => {
@@ -90,6 +93,77 @@ elements.revokeButton.addEventListener("click", async () => {
     if (!confirm(`Revoke only administrator-granted Fillr Plus access for ${email}? Apple subscriptions and active trials are not cancelled.`)) return;
     await revokeAccess();
 });
+
+elements.refreshRecentAppleButton.addEventListener("click", async () => {
+    await loadRecentAppleUsers();
+});
+
+async function loadRecentAppleUsers() {
+    await runRequest("Loading recent Apple users...", async () => {
+        const response = await adminFetch("/admin/users/recent-apple");
+
+        if (response.status === 401) {
+            elements.recentAppleUsers.replaceChildren();
+            setStatus("Invalid admin key.", "error");
+            return;
+        }
+
+        if (!response.ok) {
+            elements.recentAppleUsers.replaceChildren();
+            setStatus("Could not load recent Apple users.", "error");
+            return;
+        }
+
+        const payload = await safeJson(response);
+
+        if (!payload || !Array.isArray(payload.users)) {
+            elements.recentAppleUsers.replaceChildren();
+            setStatus("Malformed response from backend.", "error");
+            return;
+        }
+
+        renderRecentAppleUsers(payload.users);
+        setStatus("Recent Apple users loaded.", "success");
+    });
+}
+
+function renderRecentAppleUsers(users) {
+    elements.recentAppleUsers.replaceChildren();
+
+    if (users.length === 0) {
+        const message = document.createElement("p");
+        message.className = "muted";
+        message.textContent = "No Apple users found.";
+        elements.recentAppleUsers.append(message);
+        return;
+    }
+
+    users.forEach((user) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "recentUserButton";
+
+        const title = document.createElement("strong");
+        title.textContent =
+            user.displayName ||
+            user.email ||
+            "Apple account — email unavailable";
+
+        const details = document.createElement("span");
+        details.textContent =
+            `${formatDate(user.createdAt)} · ${user.id}`;
+
+        button.append(title, details);
+
+        button.addEventListener("click", () => {
+            state.selectedUser = user;
+            renderUser(user);
+            setStatus("User selected.", "success");
+        });
+
+        elements.recentAppleUsers.append(button);
+    });
+}
 
 async function searchUser(email) {
     const normalizedEmail = email.trim();

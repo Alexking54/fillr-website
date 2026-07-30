@@ -242,3 +242,36 @@ button:disabled {
         gap: 4px;
     }
 }
+
+.recentUsers {
+    display: grid;
+    gap: 10px;
+}
+
+.recentUserButton {
+    display: grid;
+    gap: 4px;
+    width: 100%;
+    min-height: 0;
+    padding: 12px 14px;
+    border: 1px solid var(--line);
+    background: #fff;
+    color: var(--ink);
+    text-align: left;
+}
+
+.recentUserButton:hover:not(:disabled) {
+    border-color: var(--mint-dark);
+    background: #f3fbf8;
+}
+
+.recentUserButton strong {
+    font-size: 0.98rem;
+}
+
+.recentUserButton span {
+    color: var(--muted);
+    font-size: 0.8rem;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+}

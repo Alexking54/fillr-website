@@ -53,6 +53,18 @@
 
             <p id="statusMessage" class="status" role="status" aria-live="polite"></p>
 
+            <section class="userPanel" aria-labelledby="recentAppleTitle">
+                <div class="sectionHeader">
+                    <div>
+                        <h3 id="recentAppleTitle">Recent Apple Users</h3>
+                        <p class="muted">Shows the 20 most recently created Apple sign-in accounts.</p>
+                    </div>
+                    <button id="refreshRecentAppleButton" type="button">Refresh</button>
+                </div>
+
+                <div id="recentAppleUsers" class="recentUsers"></div>
+            </section>
+
             <section id="userPanel" class="userPanel hidden" aria-labelledby="userTitle">
                 <h3 id="userTitle">Selected User</h3>
                 <dl id="userDetails" class="details"></dl>
