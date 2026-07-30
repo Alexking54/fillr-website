@@ -69,6 +69,25 @@
                 <h3 id="userTitle">Selected User</h3>
                 <dl id="userDetails" class="details"></dl>
 
+                <form id="adminLabelForm" class="inlineForm">
+                    <label>
+                        <span>Admin Label</span>
+                        <input
+                            id="adminLabelInput"
+                            type="text"
+                            maxlength="100"
+                            placeholder="Example: Alex test account"
+                        >
+                    </label>
+                    <button id="saveAdminLabelButton" type="submit">
+                        Save Label
+                    </button>
+                </form>
+
+                <p class="muted">
+                    This label is only visible in the admin dashboard and does not affect the user’s account.
+                </p>
+
                 <div class="actions">
                     <button id="grantLifetimeButton" type="button">Grant Lifetime Access</button>
 

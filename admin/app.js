@@ -18,6 +18,9 @@ const elements = {
     statusMessage: document.getElementById("statusMessage"),
     userPanel: document.getElementById("userPanel"),
     userDetails: document.getElementById("userDetails"),
+    adminLabelForm: document.getElementById("adminLabelForm"),
+    adminLabelInput: document.getElementById("adminLabelInput"),
+    saveAdminLabelButton: document.getElementById("saveAdminLabelButton"),
     grantLifetimeButton: document.getElementById("grantLifetimeButton"),
     grantUntilForm: document.getElementById("grantUntilForm"),
     expiryDateInput: document.getElementById("expiryDateInput"),
@@ -46,6 +49,17 @@ elements.connectionForm.addEventListener("submit", (event) => {
     loadRecentAppleUsers();
 });
 
+elements.adminLabelForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    if (!state.selectedUser) {
+        setStatus("Select a user first.", "error");
+        return;
+    }
+
+    await saveAdminLabel();
+});
+
 elements.disconnectButton.addEventListener("click", () => {
     state.backendUrl = "";
     state.adminKey = "";
@@ -55,6 +69,7 @@ elements.disconnectButton.addEventListener("click", () => {
     elements.disconnectButton.classList.add("hidden");
     elements.userPanel.classList.add("hidden");
     elements.userDetails.replaceChildren();
+    elements.adminLabelInput.value = "";
     elements.emailInput.value = "";
     elements.expiryDateInput.value = "";
     setStatus("");
@@ -145,6 +160,7 @@ function renderRecentAppleUsers(users) {
 
         const title = document.createElement("strong");
         title.textContent =
+            user.adminLabel ||
             user.displayName ||
             user.email ||
             "Apple account — email unavailable";
@@ -177,6 +193,46 @@ async function searchUser(email) {
     });
 }
 
+async function saveAdminLabel() {
+    await runRequest("Saving admin label...", async () => {
+        const response = await adminFetch(
+            `/admin/users/${encodeURIComponent(state.selectedUser.id)}/admin-label`,
+            {
+                method: "PATCH",
+                body: JSON.stringify({
+                    adminLabel: elements.adminLabelInput.value
+                })
+            }
+        );
+
+        if (response.status === 401) {
+            setStatus("Invalid admin key.", "error");
+            return;
+        }
+
+        if (!response.ok) {
+            setStatus("Could not save admin label.", "error");
+            return;
+        }
+
+        const payload = await safeJson(response);
+        state.selectedUser.adminLabel =
+            payload?.adminLabel ?? null;
+
+        elements.adminLabelInput.value =
+            state.selectedUser.adminLabel || "";
+
+        setStatus(
+            state.selectedUser.adminLabel
+                ? "Admin label saved."
+                : "Admin label cleared.",
+            "success"
+        );
+
+        await loadRecentAppleUsers();
+    });
+}
+
 async function grantAccess(expiresAt) {
     await runRequest("Granting access...", async () => {
         const response = await adminFetch(`/admin/users/${encodeURIComponent(state.selectedUser.id)}/entitlement`, {
@@ -197,7 +253,7 @@ async function grantAccess(expiresAt) {
         }
 
         setStatus("Access granted.", "success");
-        await fetchAndRenderUser(state.selectedUser.email, "Access granted.");
+        await fetchAndRenderUser(state.selectedUser.id, "Access granted.");
     });
 }
 
@@ -217,7 +273,7 @@ async function revokeAccess() {
         }
 
         setStatus("Admin access revoked.", "success");
-        await fetchAndRenderUser(state.selectedUser.email, "Admin access revoked.");
+        await fetchAndRenderUser(state.selectedUser.id, "Admin access revoked.");
     });
 }
 
@@ -291,11 +347,13 @@ function renderUser(user) {
     elements.userDetails.replaceChildren();
     appendDetail("Email", user.email);
     appendDetail("Display Name", user.displayName);
+    appendDetail("Admin Label", user.adminLabel);
     appendDetail("User ID", user.id);
     appendDetail("Created", formatDate(user.createdAt));
     appendDetail("Entitlement Source", user.entitlementSource);
     appendDetail("Entitlement Expiry", formatDate(user.entitlementExpiresAt));
     appendDetail("Admin Entitlement Active", user.adminEntitlementActive === true ? "Yes" : "No");
+    elements.adminLabelInput.value = user.adminLabel || "";
     elements.userPanel.classList.remove("hidden");
 }
 
