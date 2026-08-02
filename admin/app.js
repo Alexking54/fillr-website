@@ -93,7 +93,7 @@ elements.grantUntilForm.addEventListener("submit", async (event) => {
 
     const expiresAt = expiryDateToIso(elements.expiryDateInput.value);
     if (!expiresAt) {
-        setStatus("Choose a future expiry date.", "error");
+        setStatus("Choose a future expiry date and time.", "error");
         return;
     }
 
@@ -397,10 +397,13 @@ function normalizeBackendUrl(value) {
 
 function expiryDateToIso(value) {
     if (!value) return null;
-    const expiry = new Date(`${value}T23:59:59.999`);
+
+    const expiry = new Date(value);
+
     if (Number.isNaN(expiry.getTime()) || expiry.getTime() <= Date.now()) {
         return null;
     }
+
     return expiry.toISOString();
 }
 
