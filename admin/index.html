@@ -20,6 +20,12 @@
             This dashboard controls real Fillr accounts. Grant and revoke access only after confirming the customer record.
         </section>
 
+        <nav id="viewTabs" class="tabs hidden" role="tablist" aria-label="Admin sections">
+            <button class="tab" type="button" role="tab" data-view="accounts" aria-selected="true">Accounts</button>
+            <button class="tab" type="button" role="tab" data-view="notifications" aria-selected="false">Notifications</button>
+            <button class="tab" type="button" role="tab" data-view="rules" aria-selected="false">Auto Rules</button>
+        </nav>
+
         <section id="connectionPanel" class="panel" aria-labelledby="connectionTitle">
             <h2 id="connectionTitle">Connect</h2>
             <form id="connectionForm" class="form">
@@ -69,6 +75,14 @@
                 <h3 id="userTitle">Selected User</h3>
                 <dl id="userDetails" class="details"></dl>
 
+                <section id="cloudDataPanel" class="cloudData" aria-labelledby="cloudDataTitle">
+                    <div class="sectionHeader compact">
+                        <h3 id="cloudDataTitle">Cloud Data</h3>
+                        <button id="refreshCloudDataButton" class="secondary small" type="button">Refresh Data</button>
+                    </div>
+                    <dl id="cloudDataDetails" class="details compactDetails"></dl>
+                    <p id="cloudDataStatus" class="status compactStatus" role="status" aria-live="polite"></p>
+                </section>
                 <form id="adminLabelForm" class="inlineForm">
                     <label>
                         <span>Admin Label</span>
@@ -107,8 +121,122 @@
                 </p>
             </section>
         </section>
+        <section id="notificationsPanel" class="panel hidden" aria-labelledby="composeTitle">
+            <div class="sectionHeader">
+                <div>
+                    <h2 id="composeTitle">Send a Notification</h2>
+                    <p class="muted">Goes to every matching device as a push and into the in-app inbox.</p>
+                </div>
+            </div>
+
+            <form id="composeForm" class="form">
+                <label>
+                    <span>Title <span id="titleCounter" class="counter"></span></span>
+                    <input id="composeTitle_input" type="text" maxlength="64" required>
+                </label>
+                <label>
+                    <span>Body <span id="bodyCounter" class="counter"></span></span>
+                    <textarea id="composeBody" rows="3" maxlength="300" required></textarea>
+                </label>
+                <p class="muted small">The push banner shows roughly the first 150 characters. The inbox shows all of it.</p>
+
+                <div class="fieldRow">
+                    <label>
+                        <span>Category</span>
+                        <select id="composeCategory"></select>
+                    </label>
+                    <label>
+                        <span>Opens</span>
+                        <select id="composeDeepLink"></select>
+                    </label>
+                    <label>
+                        <span>Audience</span>
+                        <select id="composeAudience"></select>
+                    </label>
+                </div>
+
+                <label>
+                    <span>Schedule for (optional)</span>
+                    <input id="composeSchedule" type="datetime-local">
+                </label>
+
+                <div class="actions">
+                    <button id="previewButton" class="secondary" type="button">Preview Audience</button>
+                    <button id="sendButton" type="submit" disabled>Send</button>
+                </div>
+            </form>
+
+            <p id="composeStatus" class="status" role="status" aria-live="polite"></p>
+
+            <section class="userPanel" aria-labelledby="historyTitle">
+                <div class="sectionHeader compact">
+                    <h3 id="historyTitle">Sent History</h3>
+                    <button id="refreshHistoryButton" class="secondary small" type="button">Refresh</button>
+                </div>
+                <div id="historyList" class="historyList"></div>
+            </section>
+        </section>
+
+        <section id="rulesPanel" class="panel hidden" aria-labelledby="rulesTitle">
+            <div class="sectionHeader">
+                <div>
+                    <h2 id="rulesTitle">Condition-Based Rules</h2>
+                    <p class="muted">Evaluated on a schedule. Each rule reaches a person at most once per cooldown window.</p>
+                </div>
+                <button id="refreshRulesButton" class="secondary small" type="button">Refresh</button>
+            </div>
+
+            <div id="rulesList" class="historyList"></div>
+
+            <section class="userPanel" aria-labelledby="ruleFormTitle">
+                <h3 id="ruleFormTitle">New Rule</h3>
+                <form id="ruleForm" class="form">
+                    <div class="fieldRow">
+                        <label>
+                            <span>Name</span>
+                            <input id="ruleName" type="text" required>
+                        </label>
+                        <label>
+                            <span>Condition</span>
+                            <select id="ruleCondition"></select>
+                        </label>
+                    </div>
+
+                    <div id="ruleParams" class="fieldRow"></div>
+
+                    <label>
+                        <span>Title template</span>
+                        <input id="ruleTitle" type="text" maxlength="64" required>
+                    </label>
+                    <label>
+                        <span>Body template</span>
+                        <textarea id="ruleBody" rows="2" maxlength="300" required></textarea>
+                    </label>
+                    <p id="rulePlaceholders" class="muted small"></p>
+
+                    <div class="fieldRow">
+                        <label>
+                            <span>Category</span>
+                            <select id="ruleCategory"></select>
+                        </label>
+                        <label>
+                            <span>Audience</span>
+                            <select id="ruleAudience"></select>
+                        </label>
+                        <label>
+                            <span>Cooldown (days)</span>
+                            <input id="ruleCooldown" type="number" min="1" value="30" required>
+                        </label>
+                    </div>
+
+                    <button type="submit">Create Rule</button>
+                </form>
+                <p id="ruleStatus" class="status" role="status" aria-live="polite"></p>
+            </section>
+        </section>
     </main>
 
     <script src="app.js" defer></script>
+    <script src="notifications.js" defer></script>
 </body>
 </html>

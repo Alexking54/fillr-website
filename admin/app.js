@@ -2,7 +2,8 @@ const state = {
     backendUrl: "",
     adminKey: "",
     selectedUser: null,
-    loading: false
+    loading: false,
+    cloudDataLoading: false
 };
 
 const elements = {
@@ -18,6 +19,9 @@ const elements = {
     statusMessage: document.getElementById("statusMessage"),
     userPanel: document.getElementById("userPanel"),
     userDetails: document.getElementById("userDetails"),
+    cloudDataDetails: document.getElementById("cloudDataDetails"),
+    cloudDataStatus: document.getElementById("cloudDataStatus"),
+    refreshCloudDataButton: document.getElementById("refreshCloudDataButton"),
     adminLabelForm: document.getElementById("adminLabelForm"),
     adminLabelInput: document.getElementById("adminLabelInput"),
     saveAdminLabelButton: document.getElementById("saveAdminLabelButton"),
@@ -69,6 +73,8 @@ elements.disconnectButton.addEventListener("click", () => {
     elements.disconnectButton.classList.add("hidden");
     elements.userPanel.classList.add("hidden");
     elements.userDetails.replaceChildren();
+    elements.cloudDataDetails.replaceChildren();
+    setCloudDataStatus("");
     elements.adminLabelInput.value = "";
     elements.emailInput.value = "";
     elements.expiryDateInput.value = "";
@@ -107,6 +113,11 @@ elements.revokeButton.addEventListener("click", async () => {
     const email = displayValue(state.selectedUser.email);
     if (!confirm(`Revoke only administrator-granted Fillr Plus access for ${email}? Apple subscriptions and active trials are not cancelled.`)) return;
     await revokeAccess();
+});
+
+elements.refreshCloudDataButton.addEventListener("click", async () => {
+    if (!state.selectedUser || state.cloudDataLoading) return;
+    await loadCloudData(state.selectedUser.id);
 });
 
 elements.refreshRecentAppleButton.addEventListener("click", async () => {
@@ -306,6 +317,7 @@ async function fetchAndRenderUser(email, successMessage) {
     state.selectedUser = payload.users[0];
     renderUser(state.selectedUser);
     setStatus(successMessage, "success");
+    await loadCloudData(state.selectedUser.id, state.selectedUser.cloudData);
 }
 
 async function runRequest(message, action) {
@@ -353,6 +365,7 @@ function renderUser(user) {
     appendDetail("Entitlement Source", user.entitlementSource);
     appendDetail("Entitlement Expiry", formatDate(user.entitlementExpiresAt));
     appendDetail("Admin Entitlement Active", user.adminEntitlementActive === true ? "Yes" : "No");
+    renderCloudData(user.cloudData || null);
     elements.adminLabelInput.value = user.adminLabel || "";
     elements.userPanel.classList.remove("hidden");
 }
@@ -370,17 +383,118 @@ function clearSelectedUser() {
     state.selectedUser = null;
     elements.userPanel.classList.add("hidden");
     elements.userDetails.replaceChildren();
+    elements.cloudDataDetails.replaceChildren();
+    setCloudDataStatus("");
 }
 
 function setButtonsDisabled(disabled) {
     document.querySelectorAll("button").forEach((button) => {
         button.disabled = disabled;
     });
+    if (!disabled && state.cloudDataLoading) {
+        elements.refreshCloudDataButton.disabled = true;
+    }
 }
 
 function setStatus(message, type = "") {
     elements.statusMessage.textContent = message;
     elements.statusMessage.className = type ? `status ${type}` : "status";
+}
+
+async function loadCloudData(userId, fallbackCloudData = null) {
+    if (state.cloudDataLoading) return;
+    state.cloudDataLoading = true;
+    elements.refreshCloudDataButton.disabled = true;
+    renderCloudData(null);
+    setCloudDataStatus("Loading cloud data...");
+
+    try {
+        const response = await adminFetch(`/admin/users/${encodeURIComponent(userId)}/cloud-data`);
+        if (response.status === 401) {
+            setCloudDataStatus("Invalid admin key.", "error");
+            return;
+        }
+        if (!response.ok) {
+            if (fallbackCloudData) {
+                renderCloudData(fallbackCloudData);
+            }
+            setCloudDataStatus("Could not load cloud data.", "error");
+            return;
+        }
+
+        const cloudData = await safeJson(response);
+        if (!isCloudData(cloudData)) {
+            if (fallbackCloudData) {
+                renderCloudData(fallbackCloudData);
+            }
+            setCloudDataStatus("Malformed cloud data response.", "error");
+            return;
+        }
+
+        state.selectedUser = { ...state.selectedUser, cloudData };
+        renderCloudData(cloudData);
+        setCloudDataStatus("");
+    } catch {
+        if (fallbackCloudData) {
+            renderCloudData(fallbackCloudData);
+        }
+        setCloudDataStatus("Could not load cloud data.", "error");
+    } finally {
+        state.cloudDataLoading = false;
+        elements.refreshCloudDataButton.disabled = false;
+    }
+}
+
+function renderCloudData(cloudData) {
+    elements.cloudDataDetails.replaceChildren();
+    if (!cloudData) {
+        appendCloudDetail("Vehicles", "Loading...");
+        appendCloudDetail("Trips", "Loading...");
+        appendCloudDetail("Fuel receipts", "Loading...");
+        appendCloudDetail("Total trip distance", "Loading...");
+        appendCloudDetail("Last data sync", "Loading...");
+        return;
+    }
+
+    appendCloudDetail("Vehicles", formatCount(cloudData.vehicleCount));
+    appendCloudDetail("Trips", formatCount(cloudData.tripCount));
+    appendCloudDetail("Fuel receipts", formatCount(cloudData.fuelReceiptCount));
+    appendCloudDetail("Total trip distance", formatDistanceKm(cloudData.totalTripDistanceKm));
+    appendCloudDetail("Last data sync", cloudData.lastDataSyncAt ? formatDate(cloudData.lastDataSyncAt) : "No synced data");
+}
+
+function appendCloudDetail(label, value) {
+    const term = document.createElement("dt");
+    term.textContent = label;
+    const description = document.createElement("dd");
+    description.textContent = String(value);
+    elements.cloudDataDetails.append(term, description);
+}
+
+function setCloudDataStatus(message, type = "") {
+    elements.cloudDataStatus.textContent = message;
+    elements.cloudDataStatus.className = type ? `status compactStatus ${type}` : "status compactStatus";
+}
+
+function isCloudData(value) {
+    return value
+        && typeof value === "object"
+        && Number.isFinite(Number(value.vehicleCount))
+        && Number.isFinite(Number(value.tripCount))
+        && Number.isFinite(Number(value.fuelReceiptCount))
+        && Number.isFinite(Number(value.totalTripDistanceKm))
+        && (value.lastDataSyncAt == null || typeof value.lastDataSyncAt === "string");
+}
+
+function formatCount(value) {
+    return new Intl.NumberFormat().format(Number(value || 0));
+}
+
+function formatDistanceKm(value) {
+    return `${new Intl.NumberFormat(undefined, {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 1
+    }).format(Number(value || 0))} km`;
 }
 
 function normalizeBackendUrl(value) {
