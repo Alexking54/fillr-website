@@ -26,10 +26,30 @@
     <div class="product-layout">
       <section class="product-details" aria-labelledby="product-title">
         <h1 id="product-title">Fillr Bluetooth<br />Auto Trip Tracker</h1>
+        <div class="product-gallery" aria-label="Product photos">
+          <figure class="gallery-main">
+            <img id="product-image" src="assets/products/02-fillr-usb-c-to-usb-c.png" alt="Fillr Bluetooth tracker with a USB-C to USB-C cable, studio view" width="1536" height="1024" fetchpriority="high" />
+            <figcaption id="product-image-caption" aria-live="polite">USB-C · Studio view</figcaption>
+          </figure>
+          <div class="gallery-thumbnails" role="group" aria-label="Choose a product photo">
+            <button type="button" class="gallery-thumbnail" data-view="studio" aria-pressed="true" aria-label="Show USB-C studio photo">
+              <img src="assets/products/02-fillr-usb-c-to-usb-c.png" alt="" width="1536" height="1024" /><span>Studio</span>
+            </button>
+            <button type="button" class="gallery-thumbnail" data-view="car" aria-pressed="false" aria-label="Show USB-C in-car photo">
+              <img src="assets/products/04-fillr-connected-car-usb-c.png" alt="" width="1536" height="1024" loading="lazy" /><span>In your car</span>
+            </button>
+          </div>
+        </div>
         <p class="product-price">A$59.99 <span>AUD · including GST</span></p>
-        <p class="product-intro">Choose your connection. Available in USB-C and USB-A, both at the same price.</p>
-        <!-- Add the real product photography and approved description here when available. -->
+        <p class="product-intro">Start the car. Let Fillr take care of the trip.</p>
+        <p class="product-description">Make trip tracking part of your drive. The Fillr Bluetooth Auto Trip Tracker works with the Fillr app on your iPhone to start a trip automatically when your vehicle starts, and stop it when you turn your vehicle off.</p>
+        <div class="product-features">
+          <div><h2>Trips that fit your schedule</h2><p>Choose the days and time windows when automatic triggers are allowed, all in the app. Set it around your working week or the hours you want to track.</p></div>
+          <div><h2>Ready for what’s next</h2><p>Update your tracker through the Fillr app as new features become available.</p></div>
+          <div><h2>Your car. Your connection.</h2><p>Choose the cable that matches your vehicle’s USB port: USB-A or USB-C. Both options include the same Bluetooth tracker, at the same price.</p></div>
+        </div>
         <div class="product-facts">
+          <div><span>Works with</span><strong>iPhone + Fillr app</strong></div>
           <div><span>Connection options</span><strong>USB-C / USB-A</strong></div>
           <div><span>Shipping for this item</span><strong>Free within Australia</strong></div>
         </div>
@@ -39,7 +59,7 @@
         <h2 id="choose-heading">Choose your tracker</h2>
         <form id="purchase-form">
           <fieldset>
-            <legend>Connection type</legend>
+            <legend>Your vehicle’s USB connection</legend>
             <div class="variant-options">
               <label class="variant-option"><input type="radio" name="variant" value="usb-c" checked /><span><strong>USB-C</strong><small>A$59.99</small></span></label>
               <label class="variant-option"><input type="radio" name="variant" value="usb-a" /><span><strong>USB-A</strong><small>A$59.99</small></span></label>

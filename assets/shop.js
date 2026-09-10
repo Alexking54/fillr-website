@@ -5,6 +5,35 @@
   const status = document.getElementById('checkout-status');
   const selectedVariant = document.getElementById('selected-variant');
   const labels = { 'usb-c': 'USB-C', 'usb-a': 'USB-A' };
+  const photos = {
+    'usb-c': { studio: '02-fillr-usb-c-to-usb-c.png', car: '04-fillr-connected-car-usb-c.png' },
+    'usb-a': { studio: '01-fillr-usb-c-to-usb-a.png', car: '03-fillr-connected-car-usb-a.png' }
+  };
+  const productImage = document.getElementById('product-image');
+  const imageCaption = document.getElementById('product-image-caption');
+  const thumbnails = document.querySelectorAll('.gallery-thumbnail');
+  let photoView = 'studio';
+
+  function updateGallery(variant) {
+    if (!Object.hasOwn(photos, variant)) return;
+    const label = labels[variant];
+    productImage.src = `assets/products/${photos[variant][photoView]}`;
+    productImage.alt = photoView === 'studio'
+      ? `Fillr Bluetooth tracker with a USB-C to ${label} cable, studio view`
+      : `Fillr Bluetooth tracker connected to a vehicle’s ${label} port`;
+    imageCaption.textContent = `${label} · ${photoView === 'studio' ? 'Studio view' : 'In your car'}`;
+    thumbnails.forEach((thumbnail) => {
+      const view = thumbnail.dataset.view;
+      thumbnail.querySelector('img').src = `assets/products/${photos[variant][view]}`;
+      thumbnail.setAttribute('aria-pressed', String(view === photoView));
+      thumbnail.setAttribute('aria-label', `Show ${label} ${view === 'studio' ? 'studio' : 'in-car'} photo`);
+    });
+  }
+
+  thumbnails.forEach((thumbnail) => thumbnail.addEventListener('click', () => {
+    photoView = thumbnail.dataset.view;
+    updateGallery(selection());
+  }));
   document.getElementById('year').textContent = new Date().getFullYear();
 
   function checkoutURL(variant) {
@@ -27,6 +56,7 @@
 
   function update() {
     const variant = selection();
+    updateGallery(variant);
     selectedVariant.textContent = labels[variant] || 'Select a connection';
     const url = checkoutURL(variant);
     button.disabled = !url;

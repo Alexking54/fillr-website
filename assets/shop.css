@@ -11,7 +11,20 @@
 .product-details h1 { font-size: clamp(2.5rem, 4.8vw, 4.5rem); letter-spacing: -0.055em; line-height: 1.08; margin-bottom: 26px; }
 .product-price { font-size: 2rem; font-weight: 750; margin: 0 0 22px; }
 .product-price span { color: var(--muted); font-size: 0.875rem; font-weight: 500; margin-left: 6px; }
-.product-intro { color: var(--muted); max-width: 420px; font-size: 1.125rem; }
+.product-intro { color: var(--text); font-size: 1.25rem; font-weight: 650; }
+.product-description, .product-features p { color: var(--muted); line-height: 1.7; }
+.product-features { display: grid; gap: 20px; margin-top: 28px; }
+.product-features h2 { font-size: 1.05rem; margin: 0 0 6px; }
+.product-features p { margin: 0; }
+.product-gallery { margin: 0 0 32px; }
+.gallery-main { margin: 0; }
+.gallery-main > img { display: block; width: 100%; height: auto; aspect-ratio: 3 / 2; object-fit: contain; background: #f4f4f4; border-radius: 18px; }
+.gallery-main figcaption { padding: 10px 0; color: var(--muted); font-size: 0.875rem; }
+.gallery-thumbnails { display: flex; gap: 12px; }
+.gallery-thumbnail { width: 112px; padding: 4px; border: 2px solid var(--line); border-radius: 12px; background: var(--panel); color: var(--text); font: inherit; cursor: pointer; }
+.gallery-thumbnail[aria-pressed="true"] { border-color: var(--brand); }
+.gallery-thumbnail img { display: block; width: 100%; height: auto; aspect-ratio: 3 / 2; object-fit: contain; border-radius: 7px; }
+.gallery-thumbnail span { display: block; padding: 6px 0 3px; font-size: 0.8rem; }
 .product-facts { margin-top: 34px; border-top: 1px solid var(--line); }
 .product-facts div { padding: 16px 0; border-bottom: 1px solid var(--line); display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 16px; }
 .product-facts span { color: var(--muted); }

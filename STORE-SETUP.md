@@ -11,7 +11,7 @@ The static shop remains compatible with the existing GitHub Pages site. Live Str
 
 Australia only. Free shipping for purchases strictly over A$20. Each available item qualifies by itself, so each checkout link must offer A$0 Australian shipping. Shipping for orders of A$20 or less has not been specified; resolve this before adding lower-priced products or discounts. This first version sells one tracker per checkout, with no mixed-variant cart.
 
-Photos, detailed descriptions, compatibility, dispatch estimates and stock counts are pending. Do not invent these details. The draft intentionally has no simulated product photograph.
+The store includes the owner's studio and in-car images for each cable variant, with a gallery that follows the selected variant. The owner supplied the iPhone compatibility, automatic start/stop, day/time scheduling and in-app update details used in the product description. Dispatch estimates and stock counts are pending; do not invent these details.
 
 ## Connect Stripe in a sandbox first
 
