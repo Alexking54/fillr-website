@@ -1,6 +1,6 @@
 # Fillr store setup
 
-The static shop remains compatible with the existing GitHub Pages site. Stripe test Payment Links are connected; checkout is explicitly in test mode. No live checkout links have been created. No API keys or server are needed for this initial, manually fulfilled store.
+The static shop remains compatible with the existing GitHub Pages site. Live Stripe Payment Links are connected and accept real payments. No API keys or server are needed for this initial, manually fulfilled store.
 
 ## Approved catalogue
 
@@ -24,12 +24,22 @@ Photos, detailed descriptions, compatibility, dispatch estimates and stock count
 
 The website validates link format and test/live mode, but cannot verify a link's Stripe product, price, shipping rules or ownership. Verify those in Stripe before enabling checkout. The price displayed on the website is informational; Stripe's configured price is authoritative.
 
-## Before real orders
+## Live setup — 10 September 2026
 
-- Complete Stripe account activation. Confirm actual stock, product details/photos, dispatch information, returns process and store terms/privacy information with the owner. Existing app policies have not been rewritten as store policies.
-- Confirm the intended treatment of tax with the owner before configuring it. Do not silently add tax above the advertised A$59.99 total or claim GST is included without confirmation.
-- Create corresponding live products and Payment Links with the same verified settings. Replace both test URLs, then explicitly set `mode` to `live` only when ready to launch.
-- Verify live checkout details for both variants before publishing. Do not place a real charge without authorization.
+The owner confirmed Australian GST registration, A$59.99 inclusive of GST, and dispatch from stock held in Australia. Stripe's Australia registration is configured for immediate collection at 10%, using General - Tangible Goods. The owner approved Stripe Tax Basic's 0.5% transaction fee in addition to payment processing fees.
+
+Both live links have automatic tax enabled, tax included in the price, fixed quantity one, billing and shipping addresses collected, Australia-only delivery and free shipping. Promotions and adjustable quantities are disabled. GST is A$5.45 within the A$59.99 total. No live charge was placed during verification.
+
+- USB-C: https://buy.stripe.com/28EdRa4KP9Y14pTcX5gnK00
+- USB-A: https://buy.stripe.com/7sYeVe1yDgmpe0t0ajgnK01
+- Shared live shipping rate: `shr_1UDdM7KVcESInf5Y3uJwKzO1`
+- Australia tax registration: `taxreg_1UDvW5KVcESInf5YWGzwuhca`
+
+## Ongoing operations
+
+- Add actual stock, product details/photos, dispatch information, returns process and store terms/privacy information as supplied by the owner. Existing app policies have not been rewritten as store policies.
+- Keep GST included in the advertised A$59.99 total. Recheck Stripe settings when changing prices, products, discounts or shipping regions.
+- Stripe Tax calculates and collects GST; filing remains the owner's responsibility. No automatic filing partner or plan upgrade was purchased.
 - For every order, check successful payment in Stripe, connector type and shipping address before dispatch. Track fulfilment and shipment tracking separately; this draft does not implement inventory, shipping labels, an order-status dashboard or fulfilment automation. Configure payment notifications and customer receipts in Stripe.
 
 Keep checkout disabled with `mode: 'disabled'` whenever necessary. To stop sales already accessible via shared Payment Links, also deactivate those links in Stripe; hiding a website button does not disable a public checkout link.
@@ -52,7 +62,7 @@ There is no build step or dependency installation. Serve the website locally wit
 
 ## Connected testing environment — 9 September 2026
 
-Both links are verified in Stripe: one tracker per payment, AUD 59.99, no quantity adjustment or promotions, billing/shipping addresses collected, Australia as the only delivery country, AUD 0 shipping, automatic tax collection off. Tax treatment must be confirmed before live setup.
+These historical test links were verified in Stripe: one tracker per payment, AUD 59.99, no quantity adjustment or promotions, billing/shipping addresses collected, Australia as the only delivery country, AUD 0 shipping, automatic tax collection off. They are no longer used by the public store.
 
 - USB-C: https://buy.stripe.com/test_28EdRa4KP9Y14pTcX5gnK00
 - USB-A: https://buy.stripe.com/test_7sYeVe1yDgmpe0t0ajgnK01
